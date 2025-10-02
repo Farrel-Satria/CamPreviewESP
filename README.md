@@ -31,11 +31,11 @@ Ikuti langkah-langkah berikut untuk menjalankan dashboard ini:
 ### ⬇️ Langkah 0: Mengambil Kode (Cloning Repository)
 
 1. Buka Terminal atau Git Bash.
-2. Jalankan perintah berikut (ganti `[URL_REPOSITORI_ANDA]` dengan URL repository GitHub Anda):
+2. Jalankan perintah berikut (ganti `(https://github.com/Farrel-Satria/CamPreviewESP)` dengan URL repository GitHub Anda):
 
 ```bash
-git clone [URL_REPOSITORI_ANDA]
-cd nama-folder-repositori
+git clone https://github.com/Farrel-Satria/CamPreviewESP
+cd nama-CameraPreviewESP
 Sekarang Anda memiliki semua file (index.html, script.js, dll.) di folder lokal.
 
 🔌 Langkah 1: Persiapan Firmware ESP32-CAM
