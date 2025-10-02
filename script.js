@@ -9,6 +9,12 @@ const infoFps = document.getElementById('info-fps');
 const loadingSpinner = document.getElementById('loadingSpinner'); // BARU: Elemen loading spinner/overlay
 const cameraSettings = ['quality', 'brightness', 'contrast']; 
 
+// BARU: Elemen untuk Kartu Status Perangkat
+const infoSsid = document.getElementById('info-ssid');
+const infoIp = document.getElementById('info-ip');
+const infoRssi = document.getElementById('info-rssi');
+const infoBattery = document.getElementById('info-battery'); // Meskipun ESP32 tidak punya baterai, ini untuk fleksibilitas
+
 // Variabel State Global
 let streamActive = false;
 let zoomLevel = 1;
@@ -20,6 +26,7 @@ const ESP_IP = '192.168.1.77'; // Pastikan ini adalah IP ESP32-CAM Anda yang ben
 let lastTime = 0;
 let frameCount = 0;
 let fpsInterval = null; // Untuk menyimpan referensi interval
+let statusInterval = null; // BARU: Untuk menyimpan referensi interval status
 
 // --- UTILITY FUNGSI NOTIFIKASI (SWEETALERT2) ---
 
@@ -60,6 +67,41 @@ function updateFPS() {
     }
 }
 
+// --- FUNGSI BARU: FETCH DEVICE STATUS ---
+
+/**
+ * Mengambil data status perangkat (IP, SSID, RSSI, Baterai) dari ESP32
+ */
+async function fetchDeviceStatus() {
+    try {
+        const response = await fetch(`http://${ESP_IP}/status`);
+
+        if (response.ok) {
+            const data = await response.json();
+            
+            // Perbarui elemen UI dengan data dari ESP32
+            infoSsid.textContent = data.ssid || 'N/A';
+            infoIp.textContent = ESP_IP; // IP sudah diketahui
+            infoRssi.textContent = (data.rssi !== undefined && data.rssi !== null) ? `${data.rssi} dBm` : 'N/A';
+            
+            // Asumsi ESP32 tidak punya baterai, namun dipertahankan untuk fleksibilitas
+            infoBattery.textContent = (data.battery !== undefined && data.battery !== null) ? `${data.battery}%` : 'AC Power';
+
+        } else {
+            console.warn("Gagal mengambil status perangkat. Pastikan endpoint /status ada.");
+            // Set status ke N/A jika gagal
+            infoSsid.textContent = 'N/A';
+            infoRssi.textContent = 'N/A';
+        }
+    } catch (error) {
+        // Jika ada kesalahan jaringan (misalnya ESP offline)
+        console.error("Kesalahan jaringan saat mengambil status:", error);
+        infoSsid.textContent = 'N/A';
+        infoRssi.textContent = 'N/A';
+    }
+}
+
+
 // --- FUNGSI UTILITY DASHBOARD ---
 
 function updateStreamState(isActive) {
@@ -70,12 +112,24 @@ function updateStreamState(isActive) {
         lastTime = performance.now();
         frameCount = 0;
         fpsInterval = requestAnimationFrame(updateFPS);
+        // Mulai interval pembaruan status
+        if (!statusInterval) {
+            fetchDeviceStatus(); // Panggil sekali saat start
+            statusInterval = setInterval(fetchDeviceStatus, 5000); 
+        }
     } else {
+        // Hentikan FPS Counter
         if (fpsInterval) {
             cancelAnimationFrame(fpsInterval);
             fpsInterval = null;
         }
         infoFps.textContent = '0 FPS';
+        
+        // Hentikan interval pembaruan status
+        if (statusInterval) {
+            clearInterval(statusInterval);
+            statusInterval = null;
+        }
     }
 
     // Mengatur visibilitas tombol CTA
@@ -281,7 +335,7 @@ function sendCommand(cmd, value, persist = false) {
                 console.log(`[Command Sent] ${cmd} set to: ${value} (Persist: ${persist})`);
                 Toast.fire({ icon: 'success', title: `${cmd} diatur ke ${value}` });
             } else {
-                 throw new Error("ESP32 responded with non-200 status.");
+                throw new Error("ESP32 responded with non-200 status.");
             }
         })
         .catch(error => {
