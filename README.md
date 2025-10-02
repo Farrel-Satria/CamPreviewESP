@@ -1,118 +1,93 @@
-📸 Proyek: ESP32-CAM Web Control Dashboard
-Selamat datang di dashboard kontrol real-time untuk perangkat ESP32-CAM!
+# 📸 ESP32-CAM Web Control Dashboard
 
-Aplikasi web satu halaman (Single-Page Application / SPA) ini memungkinkan Anda untuk melihat live stream video dari ESP32-CAM, mengambil snapshot, dan mengontrol parameter kamera serta LED flash dari browser Anda.
+Selamat datang di dashboard kontrol real-time untuk perangkat **ESP32-CAM**!  
+Aplikasi web satu halaman (**Single-Page Application / SPA**) ini memungkinkan Anda untuk melihat **live stream video**, mengambil **snapshot**, dan mengontrol **parameter kamera serta LED flash** langsung dari browser.
 
-💻 Deskripsi dan Fitur Utama
-Dashboard ini dirancang untuk interaksi langsung dengan firmware ESP32-CAM melalui API HTTP (GET Requests).
+---
 
-⭐ Tabel Fitur yang Tersedia
-Fitur
+## 💻 Deskripsi dan Fitur Utama
 
-Deskripsi
+Dashboard ini dirancang untuk interaksi langsung dengan firmware ESP32-CAM melalui **API HTTP (GET Requests)**.
 
-Live Video Stream
+### ⭐ Fitur yang Tersedia
 
-Menampilkan umpan video real-time (membutuhkan IP Address yang benar).
+| Fitur                     | Deskripsi                                                                                  |
+|---------------------------|--------------------------------------------------------------------------------------------|
+| Live Video Stream          | Menampilkan umpan video real-time (membutuhkan IP Address yang benar).                      |
+| Indikator Koneksi & Loading| Menampilkan status koneksi dan Loading Spinner saat mencoba terhubung.                     |
+| Pengaturan Kamera          | Kontrol Brightness, Contrast, dan JPEG Quality secara langsung.                             |
+| Kontrol Resolusi           | Mengubah resolusi video (memerlukan restart stream untuk diterapkan).                     |
+| Night Mode                 | Mengaktifkan filter visual di browser untuk simulasi mode malam.                           |
+| Flash LED Control          | Mengaktifkan/menonaktifkan LED Flash bawaan.                                               |
+| Snapshot Gallery           | Mengambil gambar (capture) dan secara otomatis mengunduhnya.                               |
+| Device Management          | Tombol untuk me-reboot device dari jarak jauh.                                             |
 
-Indikator Koneksi & Loading
+---
 
-Menampilkan status koneksi dan Loading Spinner saat mencoba terhubung.
+## ⚙️ Panduan Penggunaan dan Alur Kerja
 
-Pengaturan Kamera
+Ikuti langkah-langkah berikut untuk menjalankan dashboard ini:
 
-Kontrol Brightness, Contrast, dan JPEG Quality secara langsung.
+### ⬇️ Langkah 0: Mengambil Kode (Cloning Repository)
 
-Kontrol Resolusi
+1. Buka Terminal atau Git Bash.
+2. Jalankan perintah berikut (ganti `[URL_REPOSITORI_ANDA]` dengan URL repository GitHub Anda):
 
-Mengubah resolusi video (memerlukan restart stream untuk diterapkan).
-
-Night Mode
-
-Mengaktifkan filter visual di browser untuk simulasi mode malam.
-
-Flash LED Control
-
-Mengaktifkan/menonaktifkan LED Flash bawaan.
-
-Snapshot Gallery
-
-Mengambil gambar (capture) dan secara otomatis mengunduhnya.
-
-Device Management
-
-Tombol untuk me-Reboot Device dari jarak jauh.
-
-⚙️ Panduan Penggunaan dan Alur Kerja
-Ikuti langkah-langkah berikut untuk menjalankan dashboard ini.
-
-⬇️ Langkah 0: Mengambil Kode (Cloning Repositori)
-Tim Anda dapat mengunduh dan mulai bekerja dengan kode ini menggunakan perintah git clone.
-
-Buka Terminal atau Git Bash di komputer Anda.
-
-Jalankan perintah berikut. Ganti [URL_REPOSitori_ANDA] dengan alamat HTTPS repository GitHub Anda:
-
-git clone [URL_REPOSitori_ANDA]
+```bash
+git clone [URL_REPOSITORI_ANDA]
 cd nama-folder-repositori
-
-Anda sekarang memiliki semua file (index.html, script.js, dll.) di folder lokal.
+Sekarang Anda memiliki semua file (index.html, script.js, dll.) di folder lokal.
 
 🔌 Langkah 1: Persiapan Firmware ESP32-CAM
-Pastikan perangkat ESP32-CAM Anda sudah di-flash dengan firmware yang tepat, seperti contoh CameraWebServer dari Arduino IDE.
+Pastikan ESP32-CAM sudah di-flash dengan firmware yang tepat, seperti CameraWebServer dari Arduino IDE.
 
-Konfigurasi Wi-Fi: Ubah konfigurasi Wi-Fi di kode ESP32-CAM agar terhubung ke jaringan lokal yang sama dengan komputer Anda.
+Konfigurasi Wi-Fi agar terhubung ke jaringan lokal yang sama dengan komputer.
 
-Dapatkan IP: Setelah di-upload dan terhubung, catat IP Address yang ditampilkan oleh ESP32-CAM di Serial Monitor (Contoh: 192.168.1.77).
+Catat IP Address yang ditampilkan di Serial Monitor (contoh: 192.168.1.77).
 
 🌐 Langkah 2: Konfigurasi Dashboard (Web)
-Ini adalah langkah krusial untuk menghubungkan web ke ESP32 Anda!
-
 Buka file script.js.
 
 Temukan baris penentuan IP (sekitar baris 20):
 
+javascript
+Copy code
 const ESP_IP = '192.168.1.77'; // Pastikan ini adalah IP ESP32-CAM Anda yang benar
-
-Ganti nilai '192.168.1.77' dengan IP Address asli yang Anda dapatkan di Langkah 1.
+Ganti dengan IP Address ESP32-CAM yang Anda dapatkan di langkah 1.
 
 ▶️ Langkah 3: Menjalankan Dashboard
-Buka file index.html di browser modern mana pun (Chrome, Firefox, Edge).
+Buka index.html di browser modern (Chrome, Firefox, Edge).
 
 Halaman akan menampilkan tombol besar: "Start Camera Stream".
 
 🚦 Tabel Alur Kerja (Workflow)
-Berikut adalah ringkasan aksi dan dampak langsung pada perangkat atau dashboard:
-
-Aksi
-
-Deskripsi
-
-Start Stream
-
-Menekan tombol "Start Camera Stream". Ini akan mencoba memuat stream MJPEG dari http://[IP_ANDA]:81/stream. Saat mencoba terhubung, Loading Spinner akan muncul. Jika berhasil, spinner hilang dan video tampil.
-
-Stop Stream
-
-Menghentikan koneksi video dan mengembalikan tampilan ke layar awal (CTA Overlay muncul kembali).
-
-Capture
-
-Mengambil frame dari video yang sedang ditampilkan, menyimpannya di galeri, dan secara otomatis mengunduhnya sebagai file .jpg.
-
-Kontrol Slider
-
-Mengubah nilai Quality, Brightness, atau Contrast. Setiap perubahan pada slider akan segera mengirim perintah HTTP ke ESP32-CAM untuk memperbarui pengaturan kamera.
-
-Reboot Device
-
-Mengirim perintah ke ESP32 untuk me-restart. Ini akan memutuskan koneksi Wi-Fi sementara dan dashboard akan menampilkan status Disconnected.
+Aksi	Deskripsi
+Start Stream	Menekan tombol Start Camera Stream. Mencoba memuat stream MJPEG dari http://[IP_ANDA]:81/stream. Saat mencoba terhubung, Loading Spinner muncul. Jika berhasil, spinner hilang dan video tampil.
+Stop Stream	Menghentikan koneksi video dan menampilkan layar awal (CTA Overlay muncul kembali).
+Capture	Mengambil frame dari video, menyimpannya di galeri, dan mengunduhnya sebagai file .jpg.
+Kontrol Slider	Mengubah Quality, Brightness, atau Contrast. Perubahan dikirim langsung ke ESP32-CAM via HTTP.
+Reboot Device	Mengirim perintah untuk me-restart ESP32. Koneksi Wi-Fi sementara terputus, dashboard menampilkan Disconnected.
 
 🛠️ Catatan Teknis untuk Tim
 ⚠️ Persyaratan Jaringan
-Dashboard ini hanya akan bekerja jika ESP32-CAM dan perangkat yang menjalankan web berada dalam jaringan Wi-Fi lokal yang sama.
+ESP32-CAM dan perangkat yang menjalankan web harus berada di jaringan Wi-Fi lokal yang sama.
 
 📉 Kinerja FPS
-Kinerja Frame Per Second (FPS) sangat bergantung pada kualitas jaringan Wi-Fi dan pengaturan Resolusi/Kualitas JPEG yang Anda pilih. Kualitas JPEG rendah (nilai kecil) = kualitas gambar buruk & FPS lebih tinggi. Kualitas JPEG tinggi (nilai besar) = kualitas gambar bagus & FPS lebih rendah.
+Frame per Second (FPS) bergantung pada kualitas jaringan Wi-Fi dan pengaturan Resolusi/JPEG Quality:
 
-Pastikan semua anggota tim mengkonfigurasi IP Address di script.js sebelum menggunakannya. Selamat mencoba!
+JPEG Quality rendah → gambar buram, FPS lebih tinggi
+
+JPEG Quality tinggi → gambar bagus, FPS lebih rendah
+
+🛡️ Penting (Cross-Origin)
+Karena API HTTP berjalan di jaringan lokal, CORS biasanya tidak menjadi masalah.
+
+Jika menggunakan reverse proxy atau mengakses dari luar jaringan lokal, konfigurasi firewall mungkin diperlukan.
+
+💡 Tips
+Selalu pastikan IP Address di script.js sesuai dengan ESP32-CAM yang sedang digunakan.
+
+Gunakan browser modern untuk kompatibilitas terbaik.
+
+Untuk snapshot, pastikan popup/unduhan otomatis browser aktif agar file tersimpan.
+
